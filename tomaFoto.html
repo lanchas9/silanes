@@ -288,15 +288,18 @@
             }else{
                 modoBoton = 'paso1'
                 // console.log("Hacemos upLoad de foto y vamos a registro Exitoso ")
+                let respuesta
+                let text
+                do{
+                    respuesta = prompt("Compartenos tu mensaje o frase favor (mensaje no puede estar vacio o demasiado corto)", "");
+                    text;
+                    if (respuesta == null || respuesta == "" || respuesta.length < 9 ) {
+                        text = "";
+                    } else {
+                        text = respuesta;
+                    }
+                }while(text == "")
                 
-                let person = prompt("Compartenos tu mensaje o frase favor", "");
-                let text;
-                if (person == null || person == "") {
-                    text = "Nombre usuario no disponible";
-                } else {
-                    text = person;
-                }
-    
                 const canvas = document.querySelector('#canvas')
                 let img = await canvas.toBlob(function(blob){
                     //////////////
