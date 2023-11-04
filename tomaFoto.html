@@ -339,18 +339,18 @@
             }
     
             function muestraLoading(){
-                let divNuevo = document.createElement("Div")
-                divNuevo.width = window.innerWidth
-                divNuevo.height = window.innerHeight
+                let divNuevo = document.createElement("div")
+                divNuevo.style.width = document.getElementById("camara").width
+                divNuevo.style.height = document.getElementById("camara").height
                 divNuevo.style.opacity= 0.7;
                 divNuevo.style.position = "absolute";
                 divNuevo.style.top = "0px";
     
                 let loadingNuevo = document.createElement("Img")
                 loadingNuevo.src = "img/loading.gif"
-                loadingNuevo.width = window.innerWidth
+                loadingNuevo.style.width = document.getElementById("camara").width
                 divNuevo.appendChild(loadingNuevo)
-                document.body.append(divNuevo)
+                getElementById("camara").appendChild(divNuevo)
             }
     
     </script>
