@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silanes 80 aniversario</title>
+    <link rel="stylesheet" href="css/style3.css">
+</head>
+<body class="background" onload="cargaDatos()">
+    <div class="center" id="center">
+        <h1>Textos Guardados</h1>
+        <ul id="list"></ul>
+    </div>
+    <script>
+        async function cargaDatos(){
+            fetch(`https://mosaico.app:4000/silanes/dameTextos`).then(r => r.json()).then(data => {
+                //Your logic, in my case I get JSON from server
+                if(data.statusCode == 200){
+                        let resul  = data.message
+                        let dirPhoto = "silanes"
+                        let extensionFile = ".jpg"
+                        
+                        let lu = document.getElementById('list')
+                        resul.forEach(element => {
+                            let link = document.createElement('a')
+                            link.href = `https://mosaico.app:4000/file?path=${dirPhoto}/${element.url}` 
+                            
+                            let li = document.createElement('li')
+                            li.innerHTML = element.texto
+                            
+                            link.appendChild(li)
+                            lu.appendChild(link)
+                        });
+                        
+                        
+                    }else{                        
+                        resul.statusCode = data.statusCode
+                        resul.message = data.message
+                    }
+            });
+        }
+
+    </script>
+</body>
+</html>

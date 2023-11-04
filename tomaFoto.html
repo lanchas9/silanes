@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silanes 80 aniversario</title>
+    <link rel="stylesheet" href="css/style2.css">
+</head>
+<body class="background">
+        <div id="camara">
+            <video autoplay id="video" class="camaraSelfie"></video>
+            <!-- <canvas id="canvas" class="camaraSelfie hidden"></canvas> -->
+        </div>
+        <div class="center" id="center">
+            <img src="img/1.png" alt="" srcset="" class="image2 show" onclick="abreCamara()" id="abreCamara">
+            <!-- <img src="img/btn1.png" alt="" srcset="" class="image2 hidden" onclick="tomaFoto()" id="tomaFoto">
+            <img src="img/btn2.png" alt="" srcset="" class="image2 hidden" onclick="tomaFoto()" id="repiteFoto">
+            <img src="img/btn3.png" alt="" srcset="" class="image2 hidden" onclick="guardarFoto()" id="guardaFoto"> -->
+        </div>
+    <script >
+
+        let modoBoton = 'paso1'
+        let camaraAbierta = false;
+        let stream = null;
+    
+        async function abreCamara(){
+            const supported = navigator.mediaDevices.getSupportedConstraints();
+            if(!camaraAbierta){
+                camaraAbierta = true;
+                let constraints
+                if(window.location.hostname == "localhost"){
+                    constraints= {
+                    video: {
+                        width: {
+                            min: 480,
+                            ideal: 1080,
+                            max: 1080,
+                        },
+                        height: {
+                            min: 480,
+                            ideal:  1080,
+                            max: 1080,
+                        },
+                        facingMode: 'user'
+                        , video: true
+                        },
+                    }
+                }else if(window.innerHeight > window.innerWidth){
+                    constraints = {
+                    video: {
+                        width: {
+                            min: 480,
+                            ideal: 1080,
+                            max: 1080,
+                        },
+                        height: {
+                            min: 480,
+                            ideal:  1080,
+                            max: 1080,
+                        },
+                        facingMode: 'user'
+                        , video: true
+                     },
+                    }
+                }else{
+                    constraints = {
+                    video: {
+                        width: {
+                            min: 480,
+                            ideal: 1080,
+                            max: 1080,
+                        },
+                        height: {
+                            min: 480,
+                            ideal:  1080,
+                            max: 1080,
+                        },
+                        facingMode: 'user'
+                        , video: true
+                    },
+                }
+                }
+    
+                //TOMA DE FOTOGRAFÍA VERSION 1 DECAPRITADED
+                /*
+                if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+                navigator.mediaDevices.getUserMedia({video: true})
+                
+                try{
+                    const videoStream = await navigator.mediaDevices.getUserMedia(constraints)
+                    const video = document.querySelector('#video')
+                    video.srcObject = videoStream
+                }catch(error){
+                    console.error("Error : " + error)
+                }
+            }
+            */
+            //fin
+            // alert("Objeto : " + navigator.mediaDevices)
+            try{
+            if (!navigator.mediaDevices && !navigator.mediaDevices.getUserMedia) {
+                 navigator.userMedia = navigator.mozGetUserMedia || navigator.getUserMedia
+                if (!navigator.userMedia) {
+                    alert("Please Update or Use Different Browser");
+                return
+                }
+                navigator.userMedia(constraints, (stream) => showCam(stream), (err) => showErr(err))
+                return
+            }
+    
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then((stream) => showCam(stream))
+                    .catch((err) => showErr(err))
+    
+                }catch(error){
+                    alert("Error mensaje: " + error);
+                }
+            }else{
+                tomaFoto()
+            }
+        }
+    
+
+        function showCamOLD(stream) {
+        let video = document.querySelector("#video");
+        video.setAttribute("playsinline", true);
+        video.srcObject = stream;
+        // video.height = video.scrollWidth * 1.33
+        video.scrollWidth = video.scrollHeight
+        
+        let btn1 = document.querySelector("#abreCamara");
+        btn1.classList.replace("show", "hidden");
+
+        let btn2 = document.querySelector("#tomaFoto");
+        btn2.classList.replace("hidden", "show");
+
+        let btn3 = document.querySelector("#repiteFoto");
+        btn3.classList.replace("show", "hidden");
+
+        let btn4 = document.querySelector("#guardaFoto");
+        btn4.classList.replace("show", "hidden");
+    }
+        
+        function showCam(streamLive) {
+            stream = streamLive;
+            // let video = document.createElement("video");
+            // video.className = "camaraSelfie"
+            // video.setAttribute("autoplay", true);
+            // video.setAttribute("playsinline", true);
+            // video.srcObject = stream;
+            // document.getElementById("camara").appendChild(video);
+            // video.height = video.scrollWidth * 1.33
+            //video.scrollWidth = video.scrollHeight
+
+            let video = document.querySelector("#video");
+            video.setAttribute("playsinline", true);
+            video.srcObject = stream;
+            // video.height = video.scrollWidth * 1.33
+            video.scrollWidth = video.scrollHeight
+
+
+            let btn1 = document.querySelector("#abreCamara");
+            document.getElementById("center").removeChild(btn1);
+
+            let btn2 = document.createElement("img");
+            btn2.id = "tomaFoto";
+            btn2.src = "img/btn1.png";
+            btn2.onclick = function(){tomaFoto()};
+            btn2.className = "image2";
+            document.getElementById("center").appendChild(btn2);
+        }
+    
+        function showErr(err) {
+            let message = err.name === "NotFoundError" ? "Please Attach Camera" :
+            err.name === "NotAllowedError" ? "Please Grant Permission to Access Camera" : err
+            alert(message)
+        }
+    
+        async function tomaFoto(){
+            if(modoBoton == 'paso1'){
+                /*
+                const canvas = document.querySelector('#canvas')
+                */
+
+                let canvas = document.createElement("canvas");
+                canvas.className = "camaraSelfie";
+                canvas.id = "canvas";
+
+                const video = document.querySelector('#video')
+                canvas.width = video.videoWidth
+                canvas.height = video.videoHeight
+                canvas.getContext('2d').drawImage(video, 0, 0)
+                // canvas.className  ="camaraSelfie"
+                constraints= {
+                        video: {
+                            width: {
+                                min: 480,
+                                ideal: 1080,
+                                max: 1080,
+                            },
+                            height: {
+                                min: 480,
+                                ideal: 1080,
+                                max: 1080,
+                            },
+                            facingMode: 'user'
+                            },
+                        }
+                    // const videoStream = await navigator.mediaDevices.getUserMedia(constraints)
+                    // videoStream.getTracks().forEach((track) => {
+                    //     track.stop()
+                    // })
+                    // video.className = "camaraSelfie ocultoCanvas"
+                    document.getElementById("camara").removeChild(video);
+                    document.getElementById("camara").appendChild(canvas);
+                    modoBoton = 'paso2'
+
+                    let btn1 = document.createElement("img");
+                    btn1.src = "img/btn2.png";
+                    btn1.onclick = function(){tomaFoto()};
+                    btn1.className = "image2";
+                    btn1.id = "repiteFoto";
+                    document.getElementById("center").appendChild(btn1);
+
+                    let btn2 = document.createElement("img");
+                    btn2.src = "img/btn3.png";
+                    btn2.onclick = function(){guardarFoto()};
+                    btn2.className = "image2";
+                    btn2.id = "guardaFoto";
+                    document.getElementById("center").appendChild(btn2);
+
+                    document.getElementById("center").removeChild(document.getElementById("tomaFoto"));
+
+                    // let btn1 = document.querySelector("#abreCamara");
+                    // btn1.classList.replace("show", "hidden");
+
+                    // let btn2 = document.querySelector("#tomaFoto");
+                    // btn2.classList.replace("show", "hidden");
+
+                    // let btn3 = document.querySelector("#repiteFoto");
+                    // btn3.classList.replace("hidden", "show");
+
+                    // let btn4 = document.querySelector("#guardaFoto");
+                    // btn4.classList.replace("hidden", "show");
+            }else{
+                const canvas = document.querySelector('#canvas')
+                // const video = document.querySelector('#video')
+
+                let video = document.createElement("video");
+                video.setAttribute("autoplay", true);
+                video.setAttribute("playsinline", true);
+                video.srcObject = stream;
+                video.id = "video";
+                document.getElementById("camara").appendChild(video);
+                video.className = "camaraSelfie"
+
+                document.getElementById("camara").removeChild(canvas);
+                document.getElementById("camara").appendChild(video);
+
+                let btn0 = document.querySelector("#repiteFoto");
+                document.getElementById("center").removeChild(btn0);
+
+                let btn1 = document.querySelector("#guardaFoto");
+                document.getElementById("center").removeChild(btn1);
+
+                let btn2 = document.createElement("img");
+                btn2.id = "tomaFoto";
+                btn2.src = "img/btn1.png";
+                btn2.onclick = function(){tomaFoto()};
+                btn2.className = "image2";
+                document.getElementById("center").appendChild(btn2);
+
+                // canvas.className = "camaraSelfie ocultoCanvas"
+                // video.className = "camaraSelfie visibleCanvas"
+                //cargaResultados()
+                modoBoton = 'paso1'
+            }
+                
+
+            
+        }
+    
+        async function guardarFoto(){
+            if(modoBoton == 'paso1'){
+                modoBoton = 'paso2'
+            }else{
+                modoBoton = 'paso1'
+                // console.log("Hacemos upLoad de foto y vamos a registro Exitoso ")
+                
+                let person = prompt("Compartenos tu mensaje o frase favor", "");
+                let text;
+                if (person == null || person == "") {
+                    text = "Nombre usuario no disponible";
+                } else {
+                    text = person;
+                }
+    
+                const canvas = document.querySelector('#canvas')
+                let img = await canvas.toBlob(function(blob){
+                    //////////////
+                    const formData = new FormData();
+                    let resul = {
+                        error : true,
+                        message: "",
+                        statusCode: 0
+                    }
+                    let nombreFoto = Date.now()
+    
+                    formData.append(nombreFoto, blob, nombreFoto + '.jpg');
+    
+                    const options = {
+                        method: 'POST',
+                        body: formData
+                    };
+
+                    text = encodeURI(text)
+    
+                    fetch(`https://mosaico.app:4000/silanes/uploadSelfie?texto=`+text, options).then(r => r.json()).then(data => {
+                            //Your logic, in my case I get JSON from server
+                            if(data.statusCode == 200){
+                                    resul.error = false
+                                    resul.statusCode = data.statusCode
+                                    resul.message = data.message
+                                    abrePhotobooth()
+                             }else{                        
+                                resul.statusCode = data.statusCode
+                                resul.message = data.message
+                                }
+                    });
+                },'image/jpeg', 0.95)            
+            }
+        }
+    
+        function abrePhotobooth(){
+                muestraLoading()
+                setTimeout(() => {
+                    window.location.href = 'gracias.html'
+                }, 10000);
+            }
+    
+            function muestraLoading(){
+                let divNuevo = document.createElement("Div")
+                divNuevo.width = window.innerWidth
+                divNuevo.height = window.innerHeight
+                divNuevo.style.opacity= 0.7;
+                divNuevo.style.position = "absolute";
+                divNuevo.style.top = "0px";
+    
+                let loadingNuevo = document.createElement("Img")
+                loadingNuevo.src = "img/loading.gif"
+                loadingNuevo.width = window.innerWidth
+                divNuevo.appendChild(loadingNuevo)
+                document.body.append(divNuevo)
+            }
+    
+    </script>
+</body>
+</html>
