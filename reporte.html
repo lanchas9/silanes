@@ -8,7 +8,7 @@
 </head>
 <body class="background" onload="cargaDatos()">
     <div class="center" id="center">
-        <h1>Textos Guardados</h1>
+        <h1 id="total">Textos Guardados : </h1>
         <ul id="list"></ul>
     </div>
     <script>
@@ -31,7 +31,7 @@
                             link.appendChild(li)
                             lu.appendChild(link)
                         });
-                        
+                        document.getElementById('total').innerHTML = `Textos Guardados : ${resul.length}`
                         
                     }else{                        
                         resul.statusCode = data.statusCode
