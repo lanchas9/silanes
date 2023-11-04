@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/style2.css">
 </head>
 <body class="background">
+    <div id="padre">
         <div id="camara">
             <video autoplay id="video" class="camaraSelfie"></video>
             <!-- <canvas id="canvas" class="camaraSelfie hidden"></canvas> -->
@@ -17,6 +18,7 @@
             <img src="img/btn2.png" alt="" srcset="" class="image2 hidden" onclick="tomaFoto()" id="repiteFoto">
             <img src="img/btn3.png" alt="" srcset="" class="image2 hidden" onclick="guardarFoto()" id="guardaFoto"> -->
         </div>
+    </div>
     <script >
 
         let modoBoton = 'paso1'
@@ -340,17 +342,24 @@
     
             function muestraLoading(){
                 let divNuevo = document.createElement("div")
-                divNuevo.style.width = document.getElementById("camara").width
-                divNuevo.style.height = document.getElementById("camara").height
-                divNuevo.style.opacity= 0.7;
-                divNuevo.style.position = "absolute";
-                divNuevo.style.top = "0px";
+                // divNuevo.style.width = document.getElementById("camara").style.width 
+                // divNuevo.style.height = document.getElementById("camara").style.height
+                // divNuevo.style.width = "100vw"
+                // divNuevo.style.height = "100vh"
+
+                // divNuevo.style.opacity= 0.7;
+                // divNuevo.style.position = "absolute";
+                // divNuevo.style.top = "0px";
+                divNuevo.className = "loadingBox"
     
-                let loadingNuevo = document.createElement("Img")
+                let loadingNuevo = document.createElement("img")
                 loadingNuevo.src = "img/loading.gif"
-                loadingNuevo.style.width = document.getElementById("camara").width
+                loadingNuevo.className = "loadingAnimation"
+
+                // loadingNuevo.style.width = document.getElementById("camara").width
                 divNuevo.appendChild(loadingNuevo)
-                getElementById("camara").appendChild(divNuevo)
+                document.getElementById("padre").appendChild(divNuevo)
+                console.log("Muestra loading")  
             }
     
     </script>
